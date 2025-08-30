@@ -4,6 +4,7 @@ services:
     container_name: gmail-bot
     volumes:
       - ./app:/app
+      - ./credentials.json:/app/credentials.json
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
     tty: true

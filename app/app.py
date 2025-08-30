@@ -70,10 +70,16 @@ def classify_with_chatgpt(subject, sender, body):
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": "あなたはメールアシスタントです。"},
-            {"role": "user", "content": f"以下のメールが『重要で返信が必要』かどうかを判定してください。重要かどうかは売り込みや広告ではなく、人間がアクションを求めているものやサービスからの期限付きの更新登録など。結果の1行目に「重要で確認・返信が必要:」に続いてYesかNoを記載してください。2行目以降に要約を50文字以内で書いてください。\n\n{text}"}
-        ]
+            {"role": "user", "content": f"以下のメールが『重要で返信が必要』かどうか判定してください。"
+                                        f"重要メールはアクションが必要なもののみ。"
+                                        f"結果の1行目に「重要で確認・返信が必要:」と Yes/No、"
+                                        f"2行目以降に50文字以内で要約を記載してください。\n\n{text}"}
+        ],
+        temperature=0,
+        max_tokens=200
     )
     return response.choices[0].message.content.strip()
+
 
 def main():
     service = get_gmail_service()
@@ -84,7 +90,7 @@ def main():
         return
 
     print(f"未返信メール数: {len(messages)}\n")
-    for m in messages[:20]:
+    for m in messages[:40]:
         subject, sender, body = get_message_detail(service, m['id'])
         result = classify_with_chatgpt(subject, sender, body)
 
