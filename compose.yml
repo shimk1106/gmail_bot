@@ -1,0 +1,10 @@
+services:
+  gmail-bot:
+    build: .
+    container_name: gmail-bot
+    volumes:
+      - ./app:/app
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    tty: true
+
